@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MovieCatalogue</string>
+    <string name="title_activity_detail_video">Detail Video</string>
+    <string name="movies">Movies</string>
+    <string name="tv_shows">TV Shows</string>
+    <string name="title">Title</string>
+    <string name="release_year">Release Year</string>
+    <string name="genre">Genre</string>
+    <string name="rating">Rating</string>
+    <string name="overview">Overview</string>
+    <string name="todo">TODO</string>
+</resources>
