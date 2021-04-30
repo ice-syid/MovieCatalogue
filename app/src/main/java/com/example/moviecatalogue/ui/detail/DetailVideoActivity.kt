@@ -1,12 +1,13 @@
 package com.example.moviecatalogue.ui.detail
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
+import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
+import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
 import com.example.moviecatalogue.databinding.ActivityDetailVideoBinding
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
 
@@ -31,19 +32,37 @@ class DetailVideoActivity : AppCompatActivity() {
             if (videoId != 0 && videoType != 0) {
                 viewModel.setSelectedVideo(videoId, videoType)
                 viewModel.getVideo(videoId)?.observe(this, { video ->
-                    with(binding.contentDetailVideo) {
-                        Log.d("cek", video.toString())
-                        this.textTitle.text = video.title
-                        this.textDate.text = video.date
-                        this.textRating.text = video.rating.toString()
-                        this.textOverview.text = video.overview
-                        Glide.with(applicationContext)
-                            .load("https://image.tmdb.org/t/p/w780" + video.poster)
-                            .apply(
-                                RequestOptions.placeholderOf(R.drawable.ic_loading)
-                                    .error(R.drawable.ic_error)
-                            )
-                            .into(this.imagePoster)
+                    when (video) {
+                        is MovieResultsItem -> {
+                            with(binding.contentDetailVideo) {
+                                this.textTitle.text = video.title
+                                this.textDate.text = video.date
+                                this.textRating.text = video.rating.toString()
+                                this.textOverview.text = video.overview
+                                Glide.with(applicationContext)
+                                    .load("https://image.tmdb.org/t/p/w780" + video.poster)
+                                    .apply(
+                                        RequestOptions.placeholderOf(R.drawable.ic_loading)
+                                            .error(R.drawable.ic_error)
+                                    )
+                                    .into(this.imagePoster)
+                            }
+                        }
+                        is TvShowResultsItem -> {
+                            with(binding.contentDetailVideo) {
+                                this.textTitle.text = video.title
+                                this.textDate.text = video.date
+                                this.textRating.text = video.rating.toString()
+                                this.textOverview.text = video.overview
+                                Glide.with(applicationContext)
+                                    .load("https://image.tmdb.org/t/p/w780" + video.poster)
+                                    .apply(
+                                        RequestOptions.placeholderOf(R.drawable.ic_loading)
+                                            .error(R.drawable.ic_error)
+                                    )
+                                    .into(this.imagePoster)
+                            }
+                        }
                     }
                 })
             }
