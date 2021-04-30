@@ -2,7 +2,6 @@ package com.example.moviecatalogue.ui.detail
 
 import androidx.lifecycle.ViewModel
 import com.example.moviecatalogue.data.source.local.entity.VideoEntity
-import com.example.moviecatalogue.utils.DataDummy
 
 class DetailVideoViewModel : ViewModel() {
     private var videoId: Int = 0

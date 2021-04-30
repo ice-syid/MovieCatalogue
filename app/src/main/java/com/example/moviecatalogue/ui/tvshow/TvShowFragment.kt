@@ -1,6 +1,7 @@
 package com.example.moviecatalogue.ui.tvshow
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviecatalogue.databinding.FragmentTvShowBinding
-import com.example.moviecatalogue.ui.movie.MovieViewModel
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
 
 class TvShowFragment : Fragment() {
@@ -28,10 +28,11 @@ class TvShowFragment : Fragment() {
         if (activity != null) {
             val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
-            val tvShows = viewModel.getTvShows()
-
             val tvShowAdapter = TvShowAdapter()
-            tvShowAdapter.setTvShows(tvShows)
+            viewModel.getTvShows().observe(viewLifecycleOwner, {
+                Log.d("syid", it.toString())
+                tvShowAdapter.setTvShows(it)
+            })
 
             binding.rvTvShow.layoutManager = LinearLayoutManager(context)
             binding.rvTvShow.setHasFixedSize(true)

@@ -1,8 +1,5 @@
 package com.example.moviecatalogue.utils
 
-import com.example.moviecatalogue.R
-import com.example.moviecatalogue.data.source.local.entity.VideoEntity
-
 object DataDummy {
 //    fun generateDummyMovies(): List<VideoEntity> {
 //        val movies = ArrayList<VideoEntity>()

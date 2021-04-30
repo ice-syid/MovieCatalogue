@@ -1,6 +1,7 @@
 package com.example.moviecatalogue.ui.movie
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,10 +28,11 @@ class MovieFragment : Fragment() {
         if (activity != null) {
             val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
-            val movies = viewModel.getMovies()
-
             val movieAdapter = MovieAdapter()
-            movieAdapter.setMovies(movies)
+            viewModel.getMovies().observe(viewLifecycleOwner, {
+                Log.d("syid", it.toString())
+                movieAdapter.setMovies(it)
+            })
 
             binding.rvMovie.layoutManager = LinearLayoutManager(context)
             binding.rvMovie.setHasFixedSize(true)

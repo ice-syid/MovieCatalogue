@@ -18,6 +18,7 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.VideoViewHolder>() {
         if (tvShows == null) return
         listTvShows.clear()
         listTvShows.addAll(tvShows)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
@@ -39,8 +40,9 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.VideoViewHolder>() {
             with(binding) {
                 tvVideoTitle.text = tvShow.title
                 tvVideoYear.text = tvShow.release_date
+                tvVideoRating.text = tvShow.rating.toString()
                 Glide.with(itemView.context)
-                    .load(tvShow.poster)
+                    .load("https://image.tmdb.org/t/p/w780" + tvShow.poster)
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                             .error(R.drawable.ic_error)

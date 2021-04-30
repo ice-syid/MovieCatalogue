@@ -33,7 +33,7 @@ class DetailVideoActivity : AppCompatActivity() {
                 val video = viewModel.getVideo()
                 binding.contentDetailVideo.textTitle.text = video?.title
                 binding.contentDetailVideo.textYear.text = video?.release_date
-                binding.contentDetailVideo.textRating.text = video?.rating
+                binding.contentDetailVideo.textRating.text = video?.rating.toString()
                 binding.contentDetailVideo.textOverview.text = video?.overview
                 Glide.with(this)
                     .load(video?.poster)

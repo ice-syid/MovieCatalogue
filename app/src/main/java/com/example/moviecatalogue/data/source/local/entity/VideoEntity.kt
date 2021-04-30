@@ -4,7 +4,7 @@ data class VideoEntity(
     val id: Int,
     val title: String,
     val release_date: String,
-    val rating: String,
+    val rating: Double,
     val overview: String,
     val poster: String
 )
