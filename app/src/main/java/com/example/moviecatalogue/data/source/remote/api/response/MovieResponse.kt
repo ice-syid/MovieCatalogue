@@ -13,17 +13,17 @@ data class MovieResultsItem(
     val id: Int,
 
     @field:SerializedName("original_title")
-    val originalTitle: String,
+    val title: String,
 
     @field:SerializedName("release_date")
-    val releaseDate: String,
+    val date: String,
 
     @field:SerializedName("vote_average")
-    val voteAverage: Double,
+    val rating: Double,
 
     @field:SerializedName("overview")
     val overview: String,
 
     @field:SerializedName("poster_path")
-    val posterPath: String
+    val poster: String
 )

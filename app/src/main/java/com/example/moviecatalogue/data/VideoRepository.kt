@@ -16,5 +16,9 @@ class VideoRepository private constructor(private val remoteDataSource: RemoteDa
 
     override fun getMovies() = remoteDataSource.getMovies()
 
+    override fun getMovie(movieId: Int) = remoteDataSource.getMovie(movieId)
+
     override fun getTvShows() = remoteDataSource.getTvShows()
+
+    override fun getTvShow(tvShowId: Int) = remoteDataSource.getTvShow(tvShowId)
 }

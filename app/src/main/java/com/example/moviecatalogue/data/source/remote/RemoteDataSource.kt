@@ -35,11 +35,11 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                     for (item in movies) {
                         val movie = MovieResultsItem(
                             item.id,
-                            item.originalTitle,
-                            item.releaseDate,
-                            item.voteAverage,
+                            item.title,
+                            item.date,
+                            item.rating,
                             item.overview,
-                            item.posterPath
+                            item.poster
                         )
                         movieList.add(movie)
                     }
@@ -50,6 +50,23 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
                 Log.d("syid", "gagal_movie")
+            }
+        })
+        return movieLiveData
+    }
+
+    fun getMovie(movieId: Int): LiveData<MovieResultsItem> {
+        val movieLiveData = MutableLiveData<MovieResultsItem>()
+        val response = retrofit.client.getMovie(movieId)
+        response.enqueue(object : Callback<MovieResultsItem> {
+            override fun onResponse(
+                call: Call<MovieResultsItem>,
+                response: Response<MovieResultsItem>
+            ) {
+                movieLiveData.postValue(response.body())
+            }
+
+            override fun onFailure(call: Call<MovieResultsItem>, t: Throwable) {
             }
         })
         return movieLiveData
@@ -70,11 +87,11 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                     for (item in tvShows) {
                         val tvShow = TvShowResultsItem(
                             item.id,
-                            item.originalName,
-                            item.firstAirDate,
-                            item.voteAverage,
+                            item.title,
+                            item.date,
+                            item.rating,
                             item.overview,
-                            item.posterPath
+                            item.poster
                         )
                         tvShowList.add(tvShow)
                     }
@@ -86,6 +103,24 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
             override fun onFailure(call: Call<TvShowResponse>, t: Throwable) {
                 Log.d("syid", "gagal_tv")
             }
+        })
+        return tvShowLiveData
+    }
+
+    fun getTvShow(tvShowId: Int): LiveData<TvShowResultsItem> {
+        val tvShowLiveData = MutableLiveData<TvShowResultsItem>()
+        val response = retrofit.client.getTvShow(tvShowId)
+        response.enqueue(object : Callback<TvShowResultsItem> {
+            override fun onResponse(
+                call: Call<TvShowResultsItem>,
+                response: Response<TvShowResultsItem>
+            ) {
+                tvShowLiveData.postValue(response.body())
+            }
+
+            override fun onFailure(call: Call<TvShowResultsItem>, t: Throwable) {
+            }
+
         })
         return tvShowLiveData
     }

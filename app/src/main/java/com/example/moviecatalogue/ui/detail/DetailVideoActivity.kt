@@ -1,12 +1,14 @@
 package com.example.moviecatalogue.ui.detail
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.databinding.ActivityDetailVideoBinding
+import com.example.moviecatalogue.viewmodel.ViewModelFactory
 
 class DetailVideoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailVideoBinding
@@ -19,30 +21,32 @@ class DetailVideoActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val viewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.NewInstanceFactory()
-        )[DetailVideoViewModel::class.java]
+        val factory = ViewModelFactory.getInstance(this)
+        val viewModel = ViewModelProvider(this, factory)[DetailVideoViewModel::class.java]
 
         val extras = intent.extras
         if (extras != null) {
             val videoId = extras.getInt(EXTRA_VIDEO)
             val videoType = extras.getInt(EXTRA_TYPE)
-//            if (videoId != 0 && videoType != 0) {
-//                viewModel.setSelectedVideo(videoId, videoType)
-//                val video = viewModel.getVideo()
-//                binding.contentDetailVideo.textTitle.text = video?.title
-//                binding.contentDetailVideo.textYear.text = video?.release_date
-//                binding.contentDetailVideo.textRating.text = video?.rating.toString()
-//                binding.contentDetailVideo.textOverview.text = video?.overview
-//                Glide.with(this)
-//                    .load(video?.poster)
-//                    .apply(
-//                        RequestOptions.placeholderOf(R.drawable.ic_loading)
-//                            .error(R.drawable.ic_error)
-//                    )
-//                    .into(binding.contentDetailVideo.imagePoster)
-//            }
+            if (videoId != 0 && videoType != 0) {
+                viewModel.setSelectedVideo(videoId, videoType)
+                viewModel.getVideo(videoId)?.observe(this, { video ->
+                    with(binding.contentDetailVideo) {
+                        Log.d("cek", video.toString())
+                        this.textTitle.text = video.title
+                        this.textDate.text = video.date
+                        this.textRating.text = video.rating.toString()
+                        this.textOverview.text = video.overview
+                        Glide.with(applicationContext)
+                            .load("https://image.tmdb.org/t/p/w780" + video.poster)
+                            .apply(
+                                RequestOptions.placeholderOf(R.drawable.ic_loading)
+                                    .error(R.drawable.ic_error)
+                            )
+                            .into(this.imagePoster)
+                    }
+                })
+            }
         }
     }
 

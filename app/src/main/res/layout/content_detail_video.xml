@@ -34,7 +34,7 @@
         tools:text="@string/title" />
 
     <TextView
-        android:id="@+id/text_year"
+        android:id="@+id/text_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -46,21 +46,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/text_title"
         app:layout_constraintTop_toBottomOf="@+id/text_title"
-        tools:text="@string/release_year" />
-
-    <TextView
-        android:id="@+id/text_genre"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="start"
-        android:textColor="@color/colorTextSecondary"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/text_title"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/text_title"
-        app:layout_constraintTop_toBottomOf="@+id/text_year"
-        tools:text="@string/genre" />
+        tools:text="@string/release_date" />
 
     <TextView
         android:id="@+id/text_rating"
@@ -73,7 +59,7 @@
         app:layout_constraintEnd_toEndOf="@+id/text_title"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/text_title"
-        app:layout_constraintTop_toBottomOf="@+id/text_genre"
+        app:layout_constraintTop_toBottomOf="@+id/text_date"
         tools:text="@string/rating" />
 
     <TextView

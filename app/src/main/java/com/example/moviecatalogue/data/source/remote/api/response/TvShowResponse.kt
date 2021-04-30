@@ -13,17 +13,17 @@ data class TvShowResultsItem(
 	val id: Int,
 
 	@field:SerializedName("original_name")
-	val originalName: String,
+	val title: String,
 
 	@field:SerializedName("first_air_date")
-	val firstAirDate: String,
+	val date: String,
 
 	@field:SerializedName("vote_average")
-	val voteAverage: Double,
+	val rating: Double,
 
 	@field:SerializedName("overview")
 	val overview: String,
 
 	@field:SerializedName("poster_path")
-	val posterPath: String,
+	val poster: String,
 )

@@ -38,23 +38,23 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.VideoViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
         fun bind(tvShow: TvShowResultsItem) {
             with(binding) {
-                tvVideoTitle.text = tvShow.originalName
-                tvVideoYear.text = tvShow.firstAirDate
-                tvVideoRating.text = tvShow.voteAverage.toString()
+                tvVideoTitle.text = tvShow.title
+                tvVideoYear.text = tvShow.date
+                tvVideoRating.text = tvShow.rating.toString()
                 Glide.with(itemView.context)
-                    .load("https://image.tmdb.org/t/p/w780" + tvShow.posterPath)
+                    .load("https://image.tmdb.org/t/p/w780" + tvShow.poster)
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                             .error(R.drawable.ic_error)
                     )
                     .into(imgVideoPoster)
-//                itemView.setOnClickListener {
-//                    val intent = Intent(itemView.context, DetailVideoActivity::class.java).apply {
-//                        putExtra(DetailVideoActivity.EXTRA_VIDEO, tvShow.id)
-//                        putExtra(DetailVideoActivity.EXTRA_TYPE, 2)
-//                    }
-//                    it.context.startActivity(intent)
-//                }
+                itemView.setOnClickListener {
+                    val intent = Intent(itemView.context, DetailVideoActivity::class.java).apply {
+                        putExtra(DetailVideoActivity.EXTRA_VIDEO, tvShow.id)
+                        putExtra(DetailVideoActivity.EXTRA_TYPE, 2)
+                    }
+                    it.context.startActivity(intent)
+                }
             }
         }
     }
