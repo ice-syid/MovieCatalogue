@@ -1,7 +1,6 @@
 package com.example.moviecatalogue.ui.detail
 
 import androidx.lifecycle.ViewModel
-import com.example.moviecatalogue.data.source.local.entity.VideoEntity
 
 class DetailVideoViewModel : ViewModel() {
     private var videoId: Int = 0
@@ -12,13 +11,12 @@ class DetailVideoViewModel : ViewModel() {
         this.videoType = videoType
     }
 
-    fun getVideo(): VideoEntity? {
+//    fun getVideo(): VideoEntity? {
 //        val videoEntities = when (videoType) {
 //            1 -> DataDummy.generateDummyMovies()
 //            2 -> DataDummy.generateDummyTvShows()
 //            else -> null
 //        }
 //        return videoEntities?.find { it.id == videoId }
-        return null
-    }
+//    }
 }

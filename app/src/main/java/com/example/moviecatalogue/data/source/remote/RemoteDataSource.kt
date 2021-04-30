@@ -3,9 +3,10 @@ package com.example.moviecatalogue.data.source.remote
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.moviecatalogue.data.source.local.entity.VideoEntity
 import com.example.moviecatalogue.data.source.remote.api.response.MovieResponse
+import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
 import com.example.moviecatalogue.data.source.remote.api.response.TvShowResponse
+import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
 import com.example.moviecatalogue.data.source.remote.api.service.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,17 +23,17 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
             }
     }
 
-    fun getMovies(): LiveData<ArrayList<VideoEntity>> {
-        val movieLiveData = MutableLiveData<ArrayList<VideoEntity>>()
+    fun getMovies(): LiveData<ArrayList<MovieResultsItem>> {
+        val movieLiveData = MutableLiveData<ArrayList<MovieResultsItem>>()
         val response = retrofit.client.getMovies()
         response.enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 Log.d("syid", "sukses_movie")
-                val movieList = ArrayList<VideoEntity>()
+                val movieList = ArrayList<MovieResultsItem>()
                 val movies = response.body()?.results
                 if (movies != null) {
                     for (item in movies) {
-                        val movie = VideoEntity(
+                        val movie = MovieResultsItem(
                             item.id,
                             item.originalTitle,
                             item.releaseDate,
@@ -50,13 +51,12 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
                 Log.d("syid", "gagal_movie")
             }
-
         })
         return movieLiveData
     }
 
-    fun getTvShows(): LiveData<ArrayList<VideoEntity>> {
-        val tvShowLiveData = MutableLiveData<ArrayList<VideoEntity>>()
+    fun getTvShows(): LiveData<ArrayList<TvShowResultsItem>> {
+        val tvShowLiveData = MutableLiveData<ArrayList<TvShowResultsItem>>()
         val response = retrofit.client.getTvShows()
         response.enqueue(object : Callback<TvShowResponse> {
             override fun onResponse(
@@ -64,11 +64,11 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                 response: Response<TvShowResponse>
             ) {
                 Log.d("syid", "sukses_tv")
-                val tvShowList = ArrayList<VideoEntity>()
+                val tvShowList = ArrayList<TvShowResultsItem>()
                 val tvShows = response.body()?.results
                 if (tvShows != null) {
                     for (item in tvShows) {
-                        val tvShow = VideoEntity(
+                        val tvShow = TvShowResultsItem(
                             item.id,
                             item.originalName,
                             item.firstAirDate,
@@ -86,7 +86,6 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
             override fun onFailure(call: Call<TvShowResponse>, t: Throwable) {
                 Log.d("syid", "gagal_tv")
             }
-
         })
         return tvShowLiveData
     }

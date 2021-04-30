@@ -30,7 +30,6 @@ class MovieFragment : Fragment() {
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
             val movieAdapter = MovieAdapter()
             viewModel.getMovies().observe(viewLifecycleOwner, {
-                Log.d("syid", it.toString())
                 movieAdapter.setMovies(it)
             })
 

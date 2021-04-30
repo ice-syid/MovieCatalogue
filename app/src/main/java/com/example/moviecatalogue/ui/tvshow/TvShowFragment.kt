@@ -30,7 +30,6 @@ class TvShowFragment : Fragment() {
             val viewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
             val tvShowAdapter = TvShowAdapter()
             viewModel.getTvShows().observe(viewLifecycleOwner, {
-                Log.d("syid", it.toString())
                 tvShowAdapter.setTvShows(it)
             })
 

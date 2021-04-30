@@ -7,14 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.data.source.local.entity.VideoEntity
+import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
 import com.example.moviecatalogue.databinding.ItemsMovieBinding
 import com.example.moviecatalogue.ui.detail.DetailVideoActivity
 
 class MovieAdapter : RecyclerView.Adapter<MovieAdapter.VideoViewHolder>() {
-    private var listMovies = ArrayList<VideoEntity>()
+    private var listMovies = ArrayList<MovieResultsItem>()
 
-    fun setMovies(movies: List<VideoEntity>?) {
+    fun setMovies(movies: List<MovieResultsItem>?) {
         if (movies == null) return
         listMovies.clear()
         listMovies.addAll(movies)
@@ -36,25 +36,25 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.VideoViewHolder>() {
 
     class VideoViewHolder(private val binding: ItemsMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(movie: VideoEntity) {
+        fun bind(movie: MovieResultsItem) {
             with(binding) {
-                tvVideoTitle.text = movie.title
-                tvVideoYear.text = movie.release_date
-                tvVideoRating.text = movie.rating.toString()
+                tvVideoTitle.text = movie.originalTitle
+                tvVideoYear.text = movie.releaseDate
+                tvVideoRating.text = movie.voteAverage.toString()
                 Glide.with(itemView.context)
-                    .load("https://image.tmdb.org/t/p/w780" + movie.poster)
+                    .load("https://image.tmdb.org/t/p/w780" + movie.posterPath)
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                             .error(R.drawable.ic_error)
                     )
                     .into(imgVideoPoster)
-                itemView.setOnClickListener {
-                    val intent = Intent(itemView.context, DetailVideoActivity::class.java).apply {
-                        putExtra(DetailVideoActivity.EXTRA_VIDEO, movie.id)
-                        putExtra(DetailVideoActivity.EXTRA_TYPE, 1)
-                    }
-                    it.context.startActivity(intent)
-                }
+//                itemView.setOnClickListener {
+//                    val intent = Intent(itemView.context, DetailVideoActivity::class.java).apply {
+//                        putExtra(DetailVideoActivity.EXTRA_VIDEO, movie.id)
+//                        putExtra(DetailVideoActivity.EXTRA_TYPE, 1)
+//                    }
+//                    it.context.startActivity(intent)
+//                }
             }
         }
     }
