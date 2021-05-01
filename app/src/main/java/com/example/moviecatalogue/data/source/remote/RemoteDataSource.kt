@@ -1,6 +1,5 @@
 package com.example.moviecatalogue.data.source.remote
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.moviecatalogue.data.source.remote.api.response.MovieResponse
@@ -8,11 +7,13 @@ import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsIt
 import com.example.moviecatalogue.data.source.remote.api.response.TvShowResponse
 import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
 import com.example.moviecatalogue.data.source.remote.api.service.RetrofitClient
+import com.example.moviecatalogue.utils.EspressoIdlingResource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class RemoteDataSource private constructor(private val retrofit: RetrofitClient) {
+
     companion object {
         @Volatile
         private var instance: RemoteDataSource? = null
@@ -26,9 +27,10 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
     fun getMovies(): LiveData<ArrayList<MovieResultsItem>> {
         val movieLiveData = MutableLiveData<ArrayList<MovieResultsItem>>()
         val response = retrofit.client.getMovies()
+        EspressoIdlingResource.increment()
         response.enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                Log.d("syid", "sukses_movie")
+                EspressoIdlingResource.decrement()
                 val movieList = ArrayList<MovieResultsItem>()
                 val movies = response.body()?.results
                 if (movies != null) {
@@ -43,13 +45,12 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                         )
                         movieList.add(movie)
                     }
-                    Log.d("syid", movieList.toString())
                     movieLiveData.postValue(movieList)
                 }
             }
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                Log.d("syid", "gagal_movie")
+                EspressoIdlingResource.decrement()
             }
         })
         return movieLiveData
@@ -63,10 +64,12 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                 call: Call<MovieResultsItem>,
                 response: Response<MovieResultsItem>
             ) {
+                EspressoIdlingResource.increment()
                 movieLiveData.postValue(response.body())
             }
 
             override fun onFailure(call: Call<MovieResultsItem>, t: Throwable) {
+                EspressoIdlingResource.decrement()
             }
         })
         return movieLiveData
@@ -80,7 +83,7 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                 call: Call<TvShowResponse>,
                 response: Response<TvShowResponse>
             ) {
-                Log.d("syid", "sukses_tv")
+                EspressoIdlingResource.increment()
                 val tvShowList = ArrayList<TvShowResultsItem>()
                 val tvShows = response.body()?.results
                 if (tvShows != null) {
@@ -95,13 +98,12 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                         )
                         tvShowList.add(tvShow)
                     }
-                    Log.d("syid", tvShowList.toString())
                     tvShowLiveData.postValue(tvShowList)
                 }
             }
 
             override fun onFailure(call: Call<TvShowResponse>, t: Throwable) {
-                Log.d("syid", "gagal_tv")
+                EspressoIdlingResource.decrement()
             }
         })
         return tvShowLiveData
@@ -115,12 +117,13 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                 call: Call<TvShowResultsItem>,
                 response: Response<TvShowResultsItem>
             ) {
+                EspressoIdlingResource.increment()
                 tvShowLiveData.postValue(response.body())
             }
 
             override fun onFailure(call: Call<TvShowResultsItem>, t: Throwable) {
+                EspressoIdlingResource.decrement()
             }
-
         })
         return tvShowLiveData
     }
