@@ -1,6 +1,5 @@
 package com.example.moviecatalogue
 
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -43,7 +42,6 @@ class HomeActivityTest {
 
     @Test
     fun loadDetailMovie() {
-        Log.d("syid", dummyMovie[0].toString())
         onView(withId(R.id.rv_movie)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 0,
@@ -51,13 +49,10 @@ class HomeActivityTest {
             )
         )
         onView(withId(R.id.text_title)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_title)).check(matches(withText(dummyMovie[0].title)))
         onView(withId(R.id.text_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_date)).check(matches(withText(dummyMovie[0].date)))
         onView(withId(R.id.text_rating)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_rating)).check(matches(withText(dummyMovie[0].rating.toString())))
         onView(withId(R.id.text_overview)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_overview)).check(matches(withText(dummyMovie[0].overview)))
+        onView(withId(R.id.image_poster)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -73,7 +68,6 @@ class HomeActivityTest {
 
     @Test
     fun loadDetailTvShow() {
-        Log.d("syid", dummyTvShow[0].toString())
         onView(withText(R.string.tv_shows)).perform(click())
         onView(withId(R.id.rv_tv_show)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
@@ -82,12 +76,9 @@ class HomeActivityTest {
             )
         )
         onView(withId(R.id.text_title)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_title)).check(matches(withText(dummyTvShow[0].title)))
         onView(withId(R.id.text_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_date)).check(matches(withText(dummyTvShow[0].date)))
         onView(withId(R.id.text_rating)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_rating)).check(matches(withText(dummyTvShow[0].rating.toString())))
         onView(withId(R.id.text_overview)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_overview)).check(matches(withText(dummyTvShow[0].overview)))
+        onView(withId(R.id.image_poster)).check(matches(isDisplayed()))
     }
 }
