@@ -7,15 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
+import com.example.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.example.moviecatalogue.databinding.ItemsTvShowBinding
 import com.example.moviecatalogue.ui.detail.DetailVideoActivity
 
 class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.VideoViewHolder>() {
-    private var listTvShows = ArrayList<TvShowResultsItem>()
+    private var listTvShows = mutableListOf<TvShowEntity>()
 
-    fun setTvShows(tvShows: List<TvShowResultsItem>?) {
-        if (tvShows == null) return
+    fun setTvShows(tvShows: MutableList<TvShowEntity>) {
         listTvShows.clear()
         listTvShows.addAll(tvShows)
         notifyDataSetChanged()
@@ -36,13 +35,13 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.VideoViewHolder>() {
 
     class VideoViewHolder(private val binding: ItemsTvShowBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(tvShow: TvShowResultsItem) {
+        fun bind(tvShow: TvShowEntity) {
             with(binding) {
-                tvVideoTitle.text = tvShow.title
-                tvVideoYear.text = tvShow.date
-                tvVideoRating.text = tvShow.rating.toString()
+                tvVideoTitle.text = tvShow.originalName
+                tvVideoYear.text = tvShow.firstAirDate
+                tvVideoRating.text = tvShow.voteAverage.toString()
                 Glide.with(itemView.context)
-                    .load("https://image.tmdb.org/t/p/w780" + tvShow.poster)
+                    .load("https://image.tmdb.org/t/p/w780" + tvShow.posterPath)
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                             .error(R.drawable.ic_error)

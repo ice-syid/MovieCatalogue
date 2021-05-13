@@ -1,6 +1,7 @@
 package com.example.moviecatalogue.ui.movie
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviecatalogue.databinding.FragmentMovieBinding
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
+import com.example.moviecatalogue.vo.Status
 
 class MovieFragment : Fragment() {
     private lateinit var binding: FragmentMovieBinding
@@ -28,13 +30,33 @@ class MovieFragment : Fragment() {
             val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
             val movieAdapter = MovieAdapter()
-            viewModel.getMovies().observe(viewLifecycleOwner, {
-                movieAdapter.setMovies(it)
+            viewModel.getMovies().observe(viewLifecycleOwner, { movies ->
+                Log.d("syid", movies.data?.results.toString())
+                if (movies != null) {
+                    when (movies.status) {
+                        Status.LOADING -> stateLoading(true)
+                        Status.SUCCESS -> {
+                            stateLoading(false)
+                            movies.data?.results?.let { movieAdapter.setMovies(it) }
+                        }
+                        Status.ERROR -> {
+                            stateLoading(false)
+                        }
+                    }
+                }
             })
 
             binding.rvMovie.layoutManager = LinearLayoutManager(context)
             binding.rvMovie.setHasFixedSize(true)
             binding.rvMovie.adapter = movieAdapter
+        }
+    }
+
+    private fun stateLoading(state: Boolean) {
+        if (state) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.INVISIBLE
         }
     }
 }

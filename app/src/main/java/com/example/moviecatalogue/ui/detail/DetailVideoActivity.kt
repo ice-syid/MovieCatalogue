@@ -1,15 +1,18 @@
 package com.example.moviecatalogue.ui.detail
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
-import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
+import com.example.moviecatalogue.data.source.local.entity.MovieEntity
+import com.example.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.example.moviecatalogue.databinding.ActivityDetailVideoBinding
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
+import com.example.moviecatalogue.vo.Status
 
 class DetailVideoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailVideoBinding
@@ -31,41 +34,68 @@ class DetailVideoActivity : AppCompatActivity() {
             val videoType = extras.getInt(EXTRA_TYPE)
             if (videoId != 0 && videoType != 0) {
                 viewModel.setSelectedVideo(videoId, videoType)
-                viewModel.getVideo(videoId)?.observe(this, { video ->
-                    when (video) {
-                        is MovieResultsItem -> {
-                            with(binding.contentDetailVideo) {
-                                this.textTitle.text = video.title
-                                this.textDate.text = video.date
-                                this.textRating.text = video.rating.toString()
-                                this.textOverview.text = video.overview
-                                Glide.with(applicationContext)
-                                    .load("https://image.tmdb.org/t/p/w780" + video.poster)
-                                    .apply(
-                                        RequestOptions.placeholderOf(R.drawable.ic_loading)
-                                            .error(R.drawable.ic_error)
-                                    )
-                                    .into(this.imagePoster)
+                viewModel.getVideo(videoId)?.observe(this, {
+                    Log.d("syid", it.data.toString())
+                    when (val video = it.data) {
+                        is MovieEntity -> {
+                            when (it.status) {
+                                Status.LOADING -> stateLoading(true)
+                                Status.SUCCESS -> {
+                                    stateLoading(false)
+                                    with(binding.contentDetailVideo) {
+                                        this.textTitle.text = video.originalTitle
+                                        this.textDate.text = video.releaseDate
+                                        this.textRating.text = video.voteAverage.toString()
+                                        this.textOverview.text = video.overview
+                                        Glide.with(applicationContext)
+                                            .load("https://image.tmdb.org/t/p/w780" + video.posterPath)
+                                            .apply(
+                                                RequestOptions.placeholderOf(R.drawable.ic_loading)
+                                                    .error(R.drawable.ic_error)
+                                            )
+                                            .into(this.imagePoster)
+                                    }
+                                }
+                                Status.ERROR -> {
+                                    stateLoading(false)
+                                }
                             }
                         }
-                        is TvShowResultsItem -> {
-                            with(binding.contentDetailVideo) {
-                                this.textTitle.text = video.title
-                                this.textDate.text = video.date
-                                this.textRating.text = video.rating.toString()
-                                this.textOverview.text = video.overview
-                                Glide.with(applicationContext)
-                                    .load("https://image.tmdb.org/t/p/w780" + video.poster)
-                                    .apply(
-                                        RequestOptions.placeholderOf(R.drawable.ic_loading)
-                                            .error(R.drawable.ic_error)
-                                    )
-                                    .into(this.imagePoster)
+                        is TvShowEntity -> {
+                            when (it.status) {
+                                Status.LOADING -> stateLoading(true)
+                                Status.SUCCESS -> {
+                                    stateLoading(false)
+                                    with(binding.contentDetailVideo) {
+                                        this.textTitle.text = video.originalName
+                                        this.textDate.text = video.firstAirDate
+                                        this.textRating.text = video.voteAverage.toString()
+                                        this.textOverview.text = video.overview
+                                        Glide.with(applicationContext)
+                                            .load("https://image.tmdb.org/t/p/w780" + video.posterPath)
+                                            .apply(
+                                                RequestOptions.placeholderOf(R.drawable.ic_loading)
+                                                    .error(R.drawable.ic_error)
+                                            )
+                                            .into(this.imagePoster)
+                                    }
+                                }
+                                Status.ERROR -> {
+                                    stateLoading(false)
+                                }
                             }
                         }
                     }
                 })
             }
+        }
+    }
+
+    private fun stateLoading(state: Boolean) {
+        if (state) {
+            binding.contentDetailVideo.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.contentDetailVideo.progressBar.visibility = View.INVISIBLE
         }
     }
 

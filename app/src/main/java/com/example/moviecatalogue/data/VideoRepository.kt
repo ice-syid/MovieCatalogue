@@ -1,24 +1,151 @@
 package com.example.moviecatalogue.data
 
+import androidx.lifecycle.LiveData
+import com.example.moviecatalogue.data.source.local.LocalDataSource
+import com.example.moviecatalogue.data.source.local.entity.MovieEntity
+import com.example.moviecatalogue.data.source.local.entity.MoviesEntity
+import com.example.moviecatalogue.data.source.local.entity.TvShowEntity
+import com.example.moviecatalogue.data.source.local.entity.TvShowsEntity
+import com.example.moviecatalogue.data.source.remote.ApiResponse
 import com.example.moviecatalogue.data.source.remote.RemoteDataSource
+import com.example.moviecatalogue.data.source.remote.api.response.MovieResponse
+import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
+import com.example.moviecatalogue.data.source.remote.api.response.TvShowResponse
+import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
+import com.example.moviecatalogue.utils.AppExecutors
+import com.example.moviecatalogue.vo.Resource
 
-class VideoRepository private constructor(private val remoteDataSource: RemoteDataSource) :
+class VideoRepository private constructor(
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource,
+    private val appExecutors: AppExecutors
+) :
     VideoDataSource {
 
     companion object {
         @Volatile
         private var instance: VideoRepository? = null
-        fun getInstance(remoteData: RemoteDataSource): VideoRepository =
+        fun getInstance(
+            remoteData: RemoteDataSource,
+            localData: LocalDataSource,
+            appExecutors: AppExecutors
+        ): VideoRepository =
             instance ?: synchronized(this) {
-                instance ?: VideoRepository(remoteData).apply { instance = this }
+                instance ?: VideoRepository(remoteData, localData, appExecutors).apply {
+                    instance = this
+                }
             }
     }
 
-    override fun getMovies() = remoteDataSource.getMovies()
+    override fun getMovies(): LiveData<Resource<MoviesEntity>> {
+        return object : NetworkBoundResource<MoviesEntity, MovieResponse>(appExecutors) {
+            override fun loadFromDB(): LiveData<MoviesEntity> =
+                localDataSource.getMovies()
 
-    override fun getMovie(movieId: Int) = remoteDataSource.getMovie(movieId)
+            override fun shouldFetch(data: MoviesEntity?): Boolean =
+                data == null
 
-    override fun getTvShows() = remoteDataSource.getTvShows()
+            override fun createCall(): LiveData<ApiResponse<MovieResponse>> =
+                remoteDataSource.getMovies()
 
-    override fun getTvShow(tvShowId: Int) = remoteDataSource.getTvShow(tvShowId)
+            override fun saveCallResult(data: MovieResponse) {
+                val movieList = ArrayList<MovieEntity>()
+                for (movie in data.results) {
+                    val movie = MovieEntity(
+                        movie.id,
+                        movie.title,
+                        movie.date,
+                        movie.rating,
+                        movie.overview,
+                        movie.poster
+                    )
+                    movieList.add(movie)
+                }
+
+                localDataSource.insertMovies(movieList)
+            }
+        }.asLiveData()
+    }
+
+    override fun getMovie(movieId: Int): LiveData<Resource<MovieEntity>> {
+        return object : NetworkBoundResource<MovieEntity, MovieResultsItem>(appExecutors) {
+            override fun loadFromDB(): LiveData<MovieEntity> =
+                localDataSource.getMovie(movieId)
+
+            override fun shouldFetch(data: MovieEntity?): Boolean =
+                data == null
+
+            override fun createCall(): LiveData<ApiResponse<MovieResultsItem>> =
+                remoteDataSource.getMovie(movieId)
+
+            override fun saveCallResult(data: MovieResultsItem) {
+                val movie = MovieEntity(
+                    data.id,
+                    data.title,
+                    data.date,
+                    data.rating,
+                    data.overview,
+                    data.poster
+                )
+
+                localDataSource.insertMovie(movie)
+            }
+        }.asLiveData()
+    }
+
+    override fun getTvShows(): LiveData<Resource<TvShowsEntity>> {
+        return object : NetworkBoundResource<TvShowsEntity, TvShowResponse>(appExecutors) {
+            override fun loadFromDB(): LiveData<TvShowsEntity> =
+                localDataSource.getTvShows()
+
+            override fun shouldFetch(data: TvShowsEntity?): Boolean =
+                data == null
+
+            override fun createCall(): LiveData<ApiResponse<TvShowResponse>> =
+                remoteDataSource.getTvShows()
+
+            override fun saveCallResult(data: TvShowResponse) {
+                val tvShowList = ArrayList<TvShowEntity>()
+                for (tvShow in data.results) {
+                    val tvShow = TvShowEntity(
+                        tvShow.id,
+                        tvShow.title,
+                        tvShow.date,
+                        tvShow.rating,
+                        tvShow.overview,
+                        tvShow.poster
+                    )
+                    tvShowList.add(tvShow)
+                }
+
+                localDataSource.insertTvShows(tvShowList)
+            }
+        }.asLiveData()
+    }
+
+    override fun getTvShow(tvShowId: Int): LiveData<Resource<TvShowEntity>> {
+        return object : NetworkBoundResource<TvShowEntity, TvShowResultsItem>(appExecutors) {
+            override fun loadFromDB(): LiveData<TvShowEntity> =
+                localDataSource.getTvShow(tvShowId)
+
+            override fun shouldFetch(data: TvShowEntity?): Boolean =
+                data == null
+
+            override fun createCall(): LiveData<ApiResponse<TvShowResultsItem>> =
+                remoteDataSource.getTvShow(tvShowId)
+
+            override fun saveCallResult(data: TvShowResultsItem) {
+                val tvShow = TvShowEntity(
+                    data.id,
+                    data.title,
+                    data.date,
+                    data.rating,
+                    data.overview,
+                    data.poster
+                )
+
+                localDataSource.insertTvShow(tvShow)
+            }
+        }.asLiveData()
+    }
 }
