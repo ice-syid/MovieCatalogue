@@ -1,10 +1,7 @@
 package com.example.moviecatalogue.data.source.local.room
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.moviecatalogue.data.source.local.entity.MovieEntity
 import com.example.moviecatalogue.data.source.local.entity.MoviesEntity
 import com.example.moviecatalogue.data.source.local.entity.TvShowEntity
@@ -13,7 +10,7 @@ import com.example.moviecatalogue.data.source.local.entity.TvShowsEntity
 @Dao
 interface VideoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovies(movies: ArrayList<MovieEntity>)
+    fun insertMovies(movies: MoviesEntity)
 
     @Query("SELECT * FROM table_movies")
     fun getMovies(): LiveData<MoviesEntity>
@@ -25,7 +22,7 @@ interface VideoDao {
     fun getMovie(id: Int): LiveData<MovieEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTvShows(tvShows: ArrayList<TvShowEntity>)
+    fun insertTvShows(tvShows: TvShowsEntity)
 
     @Query("SELECT * FROM table_tv_shows")
     fun getTvShows(): LiveData<TvShowsEntity>
@@ -35,4 +32,10 @@ interface VideoDao {
 
     @Query("SELECT * FROM table_tv_show WHERE id = :id")
     fun getTvShow(id: Int): LiveData<TvShowEntity>
+
+    @Update
+    fun updateMovie(movie: MovieEntity)
+
+    @Update
+    fun updateTvShow(tvShow: TvShowEntity)
 }

@@ -1,6 +1,5 @@
 package com.example.moviecatalogue.data.source.remote
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.moviecatalogue.data.source.remote.api.response.MovieResponse
@@ -45,9 +44,7 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                         )
                         movieList.add(movie)
                     }
-                    Log.d("a123", movieList.toString())
                     movieLiveData.value = ApiResponse.success(MovieResponse(results = movieList))
-                    Log.d("b123", movieLiveData.value?.body?.results.toString())
                 }
                 EspressoIdlingResource.decrement()
             }
@@ -56,7 +53,6 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                 EspressoIdlingResource.decrement()
             }
         })
-        Log.d("c123", movieLiveData.value?.body?.results.toString())
         return movieLiveData
     }
 
@@ -80,7 +76,6 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                 EspressoIdlingResource.decrement()
             }
         })
-        Log.d("syid_remote", movieLiveData.value?.body.toString())
         return movieLiveData
     }
 
@@ -107,9 +102,7 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                         )
                         tvShowList.add(tvShow)
                     }
-                    Log.d("a123", tvShowList.toString())
                     tvShowLiveData.value = ApiResponse.success(TvShowResponse(results = tvShowList))
-                    Log.d("b123", tvShowLiveData.value?.body?.results.toString())
                 }
                 EspressoIdlingResource.decrement()
             }
@@ -118,7 +111,6 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                 EspressoIdlingResource.decrement()
             }
         })
-        Log.d("c123", tvShowLiveData.value?.body?.results.toString())
         return tvShowLiveData
     }
 
@@ -142,7 +134,6 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
                 EspressoIdlingResource.decrement()
             }
         })
-        Log.d("syid_remote", tvShowLiveData.value?.body.toString())
         return tvShowLiveData
     }
 }

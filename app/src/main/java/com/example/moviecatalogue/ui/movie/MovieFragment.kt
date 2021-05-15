@@ -1,7 +1,6 @@
 package com.example.moviecatalogue.ui.movie
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,6 @@ class MovieFragment : Fragment() {
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
             val movieAdapter = MovieAdapter()
             viewModel.getMovies().observe(viewLifecycleOwner, { movies ->
-                Log.d("syid", movies.data?.results.toString())
                 if (movies != null) {
                     when (movies.status) {
                         Status.LOADING -> stateLoading(true)

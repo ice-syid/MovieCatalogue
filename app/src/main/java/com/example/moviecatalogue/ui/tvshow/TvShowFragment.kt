@@ -1,7 +1,6 @@
 package com.example.moviecatalogue.ui.tvshow
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,6 @@ class TvShowFragment : Fragment() {
             val viewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
             val tvShowAdapter = TvShowAdapter()
             viewModel.getTvShows().observe(viewLifecycleOwner, { tvShows ->
-                Log.d("syid", tvShows.data?.results.toString())
                 if (tvShows != null) {
                     when (tvShows.status) {
                         Status.LOADING -> stateLoading(true)

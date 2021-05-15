@@ -1,9 +1,11 @@
 package com.example.moviecatalogue.ui.detail
 
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -16,6 +18,11 @@ import com.example.moviecatalogue.vo.Status
 
 class DetailVideoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailVideoBinding
+    private lateinit var viewModel: DetailVideoViewModel
+    private lateinit var movie: MovieEntity
+    private lateinit var tvShow: TvShowEntity
+    private var extras: Bundle? = null
+    private var menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,18 +33,18 @@ class DetailVideoActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val factory = ViewModelFactory.getInstance(this)
-        val viewModel = ViewModelProvider(this, factory)[DetailVideoViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[DetailVideoViewModel::class.java]
 
-        val extras = intent.extras
+        extras = intent.extras
         if (extras != null) {
-            val videoId = extras.getInt(EXTRA_VIDEO)
-            val videoType = extras.getInt(EXTRA_TYPE)
+            val videoId = extras?.getInt(EXTRA_VIDEO)
+            val videoType = extras?.getInt(EXTRA_TYPE)
             if (videoId != 0 && videoType != 0) {
                 viewModel.setSelectedVideo(videoId, videoType)
                 viewModel.getVideo(videoId)?.observe(this, {
-                    Log.d("syid", it.data.toString())
                     when (val video = it.data) {
                         is MovieEntity -> {
+                            movie = video
                             when (it.status) {
                                 Status.LOADING -> stateLoading(true)
                                 Status.SUCCESS -> {
@@ -62,6 +69,7 @@ class DetailVideoActivity : AppCompatActivity() {
                             }
                         }
                         is TvShowEntity -> {
+                            tvShow = video
                             when (it.status) {
                                 Status.LOADING -> stateLoading(true)
                                 Status.SUCCESS -> {
@@ -96,6 +104,72 @@ class DetailVideoActivity : AppCompatActivity() {
             binding.contentDetailVideo.progressBar.visibility = View.VISIBLE
         } else {
             binding.contentDetailVideo.progressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_detail, menu)
+        this.menu = menu
+        val extras = intent.extras
+        if (extras != null) {
+            val videoId = extras.getInt(EXTRA_VIDEO)
+            val videoType = extras.getInt(EXTRA_TYPE)
+            if (videoId != 0 && videoType != 0) {
+                viewModel.setSelectedVideo(videoId, videoType)
+                viewModel.getVideo(videoId)?.observe(this, {
+                    when (val video = it.data) {
+                        is MovieEntity -> {
+                            when (it.status) {
+                                Status.LOADING -> stateLoading(true)
+                                Status.SUCCESS -> {
+                                    stateLoading(false)
+                                    setFavoriteState(video.isFavorite)
+                                }
+                                Status.ERROR -> {
+                                    stateLoading(false)
+                                }
+                            }
+                        }
+                        is TvShowEntity -> {
+                            when (it.status) {
+                                Status.LOADING -> stateLoading(true)
+                                Status.SUCCESS -> {
+                                    stateLoading(false)
+                                    setFavoriteState(video.isFavorite)
+                                }
+                                Status.ERROR -> {
+                                    stateLoading(false)
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_favorite) {
+            val videoType = extras?.getInt(EXTRA_TYPE)
+            if (videoType == 1) {
+                viewModel.setFavoriteMovie(movie)
+            } else {
+                viewModel.setFavoriteTvShow(tvShow)
+            }
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setFavoriteState(state: Boolean) {
+        if (menu == null) return
+        val menuItem = menu?.findItem(R.id.action_favorite)
+        if (state) {
+            menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_on)
+        } else {
+            menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_off)
         }
     }
 

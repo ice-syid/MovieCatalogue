@@ -39,8 +39,8 @@ class VideoRepository private constructor(
 
     override fun getMovies(): LiveData<Resource<MoviesEntity>> {
         return object : NetworkBoundResource<MoviesEntity, MovieResponse>(appExecutors) {
-            override fun loadFromDB(): LiveData<MoviesEntity> =
-                localDataSource.getMovies()
+            override fun loadFromDB(): LiveData<MoviesEntity> = localDataSource.getMovies()
+
 
             override fun shouldFetch(data: MoviesEntity?): Boolean =
                 data == null
@@ -61,16 +61,15 @@ class VideoRepository private constructor(
                     )
                     movieList.add(movie)
                 }
-
-                localDataSource.insertMovies(movieList)
+                localDataSource.insertMovies(MoviesEntity(1, movieList))
             }
         }.asLiveData()
     }
 
     override fun getMovie(movieId: Int): LiveData<Resource<MovieEntity>> {
         return object : NetworkBoundResource<MovieEntity, MovieResultsItem>(appExecutors) {
-            override fun loadFromDB(): LiveData<MovieEntity> =
-                localDataSource.getMovie(movieId)
+            override fun loadFromDB(): LiveData<MovieEntity> = localDataSource.getMovie(movieId)
+
 
             override fun shouldFetch(data: MovieEntity?): Boolean =
                 data == null
@@ -95,8 +94,7 @@ class VideoRepository private constructor(
 
     override fun getTvShows(): LiveData<Resource<TvShowsEntity>> {
         return object : NetworkBoundResource<TvShowsEntity, TvShowResponse>(appExecutors) {
-            override fun loadFromDB(): LiveData<TvShowsEntity> =
-                localDataSource.getTvShows()
+            override fun loadFromDB(): LiveData<TvShowsEntity> = localDataSource.getTvShows()
 
             override fun shouldFetch(data: TvShowsEntity?): Boolean =
                 data == null
@@ -117,16 +115,14 @@ class VideoRepository private constructor(
                     )
                     tvShowList.add(tvShow)
                 }
-
-                localDataSource.insertTvShows(tvShowList)
+                localDataSource.insertTvShows(TvShowsEntity(1, tvShowList))
             }
         }.asLiveData()
     }
 
     override fun getTvShow(tvShowId: Int): LiveData<Resource<TvShowEntity>> {
         return object : NetworkBoundResource<TvShowEntity, TvShowResultsItem>(appExecutors) {
-            override fun loadFromDB(): LiveData<TvShowEntity> =
-                localDataSource.getTvShow(tvShowId)
+            override fun loadFromDB(): LiveData<TvShowEntity> = localDataSource.getTvShow(tvShowId)
 
             override fun shouldFetch(data: TvShowEntity?): Boolean =
                 data == null
@@ -148,4 +144,10 @@ class VideoRepository private constructor(
             }
         }.asLiveData()
     }
+
+    override fun setFavoriteMovie(movie: MovieEntity, state: Boolean) =
+        appExecutors.diskIO().execute { localDataSource.setFavoriteMovie(movie, state) }
+
+    override fun setFavoriteTvShow(tvShow: TvShowEntity, state: Boolean) =
+        appExecutors.diskIO().execute { localDataSource.setFavoriteTvShow(tvShow, state) }
 }

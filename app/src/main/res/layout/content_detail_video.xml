@@ -68,11 +68,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:text="@string/overview"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/image_poster"
-        app:layout_constraintTop_toBottomOf="@+id/image_poster" />
+        app:layout_constraintTop_toBottomOf="@+id/image_poster"
+        tools:text="@string/overview" />
 
     <TextView
         android:id="@+id/text_overview"
@@ -80,13 +80,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/overview"
         android:textColor="@color/colorText"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/text_title"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/image_poster"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:text="@string/overview" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
