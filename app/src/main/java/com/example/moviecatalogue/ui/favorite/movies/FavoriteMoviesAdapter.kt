@@ -3,7 +3,7 @@ package com.example.moviecatalogue.ui.favorite.movies
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,7 +14,7 @@ import com.example.moviecatalogue.databinding.ItemsMovieBinding
 import com.example.moviecatalogue.ui.detail.DetailVideoActivity
 
 class FavoriteMoviesAdapter :
-    PagingDataAdapter<MovieEntity, FavoriteMoviesAdapter.VideoViewHolder>(DIFF_CALLBACK) {
+    PagedListAdapter<MovieEntity, FavoriteMoviesAdapter.VideoViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val itemsMovieBinding =

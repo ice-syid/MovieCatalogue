@@ -1,7 +1,8 @@
 package com.example.moviecatalogue.data
 
 import androidx.lifecycle.LiveData
-import androidx.paging.*
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.example.moviecatalogue.data.source.local.LocalDataSource
 import com.example.moviecatalogue.data.source.local.entity.MovieEntity
 import com.example.moviecatalogue.data.source.local.entity.MoviesEntity
@@ -15,7 +16,6 @@ import com.example.moviecatalogue.data.source.remote.api.response.TvShowResponse
 import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
 import com.example.moviecatalogue.utils.AppExecutors
 import com.example.moviecatalogue.vo.Resource
-import kotlinx.coroutines.Dispatchers
 
 class VideoRepository private constructor(
     private val remoteDataSource: RemoteDataSource,
@@ -159,17 +159,7 @@ class VideoRepository private constructor(
             .setInitialLoadSizeHint(5)
             .setPageSize(5)
             .build()
-        return Pager(
-            PagingConfig(
-                config.pageSize,
-                config.prefetchDistance,
-                config.enablePlaceholders,
-                config.initialLoadSizeHint,
-                config.maxSize
-            ),
-            this.initialLoadKey,
-            localDataSource.getFavoriteMovies().asPagingSourceFactory(Dispatchers.IO)
-        ).liveData.build()
+        return LivePagedListBuilder(localDataSource.getFavoriteMovies(), config).build()
     }
 
     override fun getFavoriteTvShows(): LiveData<PagedList<TvShowEntity>> {
@@ -178,16 +168,6 @@ class VideoRepository private constructor(
             .setInitialLoadSizeHint(5)
             .setPageSize(5)
             .build()
-        return Pager(
-            PagingConfig(
-                config.pageSize,
-                config.prefetchDistance,
-                config.enablePlaceholders,
-                config.initialLoadSizeHint,
-                config.maxSize
-            ),
-            this.initialLoadKey,
-            localDataSource.getFavoriteTvShows().asPagingSourceFactory(Dispatchers.IO)
-        ).liveData.build()
+        return LivePagedListBuilder(localDataSource.getFavoriteTvShows(), config).build()
     }
 }
