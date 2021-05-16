@@ -2,6 +2,7 @@ package com.example.moviecatalogue.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.DataSource
 import com.example.moviecatalogue.data.source.local.LocalDataSource
 import com.example.moviecatalogue.data.source.local.entity.MovieEntity
 import com.example.moviecatalogue.data.source.local.entity.MoviesEntity
@@ -11,6 +12,8 @@ import com.example.moviecatalogue.data.source.remote.RemoteDataSource
 import com.example.moviecatalogue.utils.AppExecutors
 import com.example.moviecatalogue.utils.DataDummy
 import com.example.moviecatalogue.utils.LiveDataTestUtil
+import com.example.moviecatalogue.utils.PagedListUtil
+import com.example.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -85,5 +88,31 @@ class VideoRepositoryTest {
         verify(local).getTvShow(tvShowId)
         assertNotNull(tvShowEntity)
         assertEquals(tvShow.value, tvShowEntity.data)
+    }
+
+    @Test
+    fun getFavoriteMovies() {
+        val dataSourceFactory =
+            mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
+        `when`(local.getFavoriteMovies()).thenReturn(dataSourceFactory)
+        videoRepository.getFavoriteMovies()
+
+        val favoriteMovies =
+            Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
+        verify(local).getFavoriteMovies()
+        assertNotNull(favoriteMovies)
+    }
+
+    @Test
+    fun getFavoriteTvShows() {
+        val dataSourceFactory =
+            mock(DataSource.Factory::class.java) as DataSource.Factory<Int, TvShowEntity>
+        `when`(local.getFavoriteTvShows()).thenReturn(dataSourceFactory)
+        videoRepository.getFavoriteTvShows()
+
+        val favoriteTvShows =
+            Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShows()))
+        verify(local).getFavoriteTvShows()
+        assertNotNull(favoriteTvShows)
     }
 }
