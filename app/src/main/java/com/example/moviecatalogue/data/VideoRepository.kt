@@ -1,6 +1,7 @@
 package com.example.moviecatalogue.data
 
 import androidx.lifecycle.LiveData
+import androidx.paging.*
 import com.example.moviecatalogue.data.source.local.LocalDataSource
 import com.example.moviecatalogue.data.source.local.entity.MovieEntity
 import com.example.moviecatalogue.data.source.local.entity.MoviesEntity
@@ -14,6 +15,7 @@ import com.example.moviecatalogue.data.source.remote.api.response.TvShowResponse
 import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
 import com.example.moviecatalogue.utils.AppExecutors
 import com.example.moviecatalogue.vo.Resource
+import kotlinx.coroutines.Dispatchers
 
 class VideoRepository private constructor(
     private val remoteDataSource: RemoteDataSource,
@@ -150,4 +152,42 @@ class VideoRepository private constructor(
 
     override fun setFavoriteTvShow(tvShow: TvShowEntity, state: Boolean) =
         appExecutors.diskIO().execute { localDataSource.setFavoriteTvShow(tvShow, state) }
+
+    override fun getFavoriteMovies(): LiveData<PagedList<MovieEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setInitialLoadSizeHint(5)
+            .setPageSize(5)
+            .build()
+        return Pager(
+            PagingConfig(
+                config.pageSize,
+                config.prefetchDistance,
+                config.enablePlaceholders,
+                config.initialLoadSizeHint,
+                config.maxSize
+            ),
+            this.initialLoadKey,
+            localDataSource.getFavoriteMovies().asPagingSourceFactory(Dispatchers.IO)
+        ).liveData.build()
+    }
+
+    override fun getFavoriteTvShows(): LiveData<PagedList<TvShowEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setInitialLoadSizeHint(5)
+            .setPageSize(5)
+            .build()
+        return Pager(
+            PagingConfig(
+                config.pageSize,
+                config.prefetchDistance,
+                config.enablePlaceholders,
+                config.initialLoadSizeHint,
+                config.maxSize
+            ),
+            this.initialLoadKey,
+            localDataSource.getFavoriteTvShows().asPagingSourceFactory(Dispatchers.IO)
+        ).liveData.build()
+    }
 }

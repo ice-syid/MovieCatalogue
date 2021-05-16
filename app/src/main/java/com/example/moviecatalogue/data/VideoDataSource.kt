@@ -1,12 +1,11 @@
 package com.example.moviecatalogue.data
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import com.example.moviecatalogue.data.source.local.entity.MovieEntity
 import com.example.moviecatalogue.data.source.local.entity.MoviesEntity
 import com.example.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.example.moviecatalogue.data.source.local.entity.TvShowsEntity
-import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
-import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
 import com.example.moviecatalogue.vo.Resource
 
 interface VideoDataSource {
@@ -22,4 +21,8 @@ interface VideoDataSource {
     fun setFavoriteMovie(movie: MovieEntity, state: Boolean)
 
     fun setFavoriteTvShow(tvShow: TvShowEntity, state: Boolean)
+
+    fun getFavoriteMovies(): LiveData<PagedList<MovieEntity>>
+
+    fun getFavoriteTvShows(): LiveData<PagedList<TvShowEntity>>
 }

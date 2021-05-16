@@ -1,6 +1,7 @@
 package com.example.moviecatalogue.data.source.local.room
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.*
 import com.example.moviecatalogue.data.source.local.entity.MovieEntity
 import com.example.moviecatalogue.data.source.local.entity.MoviesEntity
@@ -38,4 +39,10 @@ interface VideoDao {
 
     @Update
     fun updateTvShow(tvShow: TvShowEntity)
+
+    @Query("SELECT * FROM table_movie WHERE isFavorite = 1")
+    fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity>
+
+    @Query("SELECT * FROM table_tv_show WHERE isFavorite = 1")
+    fun getFavoriteTvShows(): DataSource.Factory<Int, TvShowEntity>
 }

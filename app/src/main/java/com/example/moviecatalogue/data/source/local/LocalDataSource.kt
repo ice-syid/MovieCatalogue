@@ -28,6 +28,10 @@ class LocalDataSource(private val videoDao: VideoDao) {
         videoDao.updateTvShow(tvShow)
     }
 
+    fun getFavoriteMovies() = videoDao.getFavoriteMovies()
+
+    fun getFavoriteTvShows() = videoDao.getFavoriteTvShows()
+
     companion object {
         private var INSTANCE: LocalDataSource? = null
 
