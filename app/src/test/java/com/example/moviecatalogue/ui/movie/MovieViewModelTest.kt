@@ -4,8 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.moviecatalogue.data.VideoRepository
-import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
+import com.example.moviecatalogue.data.source.local.entity.MoviesEntity
 import com.example.moviecatalogue.utils.DataDummy
+import com.example.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -28,7 +29,7 @@ class MovieViewModelTest {
     private lateinit var videoRepository: VideoRepository
 
     @Mock
-    private lateinit var observer: Observer<List<MovieResultsItem>>
+    private lateinit var observer: Observer<Resource<MoviesEntity>>
 
     @Before
     fun setUp() {
@@ -37,15 +38,15 @@ class MovieViewModelTest {
 
     @Test
     fun getMovies() {
-        val dummyMovies = DataDummy.generateDummyMovies()
-        val movies = MutableLiveData<ArrayList<MovieResultsItem>>()
+        val dummyMovies = Resource.success(MoviesEntity(1, DataDummy.generateDummyMovies()))
+        val movies = MutableLiveData<Resource<MoviesEntity>>()
         movies.value = dummyMovies
 
         `when`(videoRepository.getMovies()).thenReturn(movies)
-        val movieEntities = viewModel.getMovies().value
+        val movieEntities = viewModel.getMovies().value?.data
         verify(videoRepository).getMovies()
         assertNotNull(movieEntities)
-        assertEquals(10, movieEntities?.size)
+        assertEquals(10, movieEntities?.results?.size)
 
         viewModel.getMovies().observeForever(observer)
         verify(observer).onChanged(dummyMovies)

@@ -4,8 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.moviecatalogue.data.VideoRepository
-import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
+import com.example.moviecatalogue.data.source.local.entity.TvShowsEntity
 import com.example.moviecatalogue.utils.DataDummy
+import com.example.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -28,7 +29,7 @@ class TvShowViewModelTest {
     private lateinit var videoRepository: VideoRepository
 
     @Mock
-    private lateinit var observer: Observer<List<TvShowResultsItem>>
+    private lateinit var observer: Observer<Resource<TvShowsEntity>>
 
     @Before
     fun setUp() {
@@ -37,15 +38,15 @@ class TvShowViewModelTest {
 
     @Test
     fun getTvShows() {
-        val dummyTvShows = DataDummy.generateDummyTvShows()
-        val tvShows = MutableLiveData<ArrayList<TvShowResultsItem>>()
+        val dummyTvShows = Resource.success(TvShowsEntity(1, DataDummy.generateDummyTvShows()))
+        val tvShows = MutableLiveData<Resource<TvShowsEntity>>()
         tvShows.value = dummyTvShows
 
         `when`(videoRepository.getTvShows()).thenReturn(tvShows)
-        val tvShowEntities = viewModel.getTvShows().value
+        val tvShowEntities = viewModel.getTvShows().value?.data
         verify(videoRepository).getTvShows()
         assertNotNull(tvShowEntities)
-        assertEquals(10, tvShowEntities?.size)
+        assertEquals(10, tvShowEntities?.results?.size)
 
         viewModel.getTvShows().observeForever(observer)
         verify(observer).onChanged(dummyTvShows)

@@ -1,13 +1,13 @@
 package com.example.moviecatalogue.utils
 
-import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
-import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
+import com.example.moviecatalogue.data.source.local.entity.MovieEntity
+import com.example.moviecatalogue.data.source.local.entity.TvShowEntity
 
 object DataDummy {
-    fun generateDummyMovies(): ArrayList<MovieResultsItem> {
-        val movies = ArrayList<MovieResultsItem>()
+    fun generateDummyMovies(): ArrayList<MovieEntity> {
+        val movies = ArrayList<MovieEntity>()
         movies.add(
-            MovieResultsItem(
+            MovieEntity(
                 1,
                 "A Star Is Born",
                 "2018",
@@ -17,7 +17,7 @@ object DataDummy {
             )
         )
         movies.add(
-            MovieResultsItem(
+            MovieEntity(
                 2,
                 "Alita: Battle Angel",
                 "2019",
@@ -27,7 +27,7 @@ object DataDummy {
             )
         )
         movies.add(
-            MovieResultsItem(
+            MovieEntity(
                 3,
                 "Aquaman",
                 "2018",
@@ -37,7 +37,7 @@ object DataDummy {
             )
         )
         movies.add(
-            MovieResultsItem(
+            MovieEntity(
                 4,
                 "Bohemian Rhapsody",
                 "2018",
@@ -47,7 +47,7 @@ object DataDummy {
             )
         )
         movies.add(
-            MovieResultsItem(
+            MovieEntity(
                 5,
                 "Cold Pursuit",
                 "2019",
@@ -57,7 +57,7 @@ object DataDummy {
             )
         )
         movies.add(
-            MovieResultsItem(
+            MovieEntity(
                 6,
                 "Creed II",
                 "2018",
@@ -67,7 +67,7 @@ object DataDummy {
             )
         )
         movies.add(
-            MovieResultsItem(
+            MovieEntity(
                 7,
                 "Fantastic Beasts: The Crimes of Grindelwald",
                 "2018",
@@ -77,7 +77,7 @@ object DataDummy {
             )
         )
         movies.add(
-            MovieResultsItem(
+            MovieEntity(
                 8,
                 "Glass",
                 "2019",
@@ -87,7 +87,7 @@ object DataDummy {
             )
         )
         movies.add(
-            MovieResultsItem(
+            MovieEntity(
                 9,
                 "How to Train Your Dragon: The Hidden World",
                 "2019",
@@ -97,7 +97,7 @@ object DataDummy {
             )
         )
         movies.add(
-            MovieResultsItem(
+            MovieEntity(
                 10,
                 "Avengers: Infinity War",
                 "2018",
@@ -109,10 +109,10 @@ object DataDummy {
         return movies
     }
 
-    fun generateDummyTvShows(): ArrayList<TvShowResultsItem> {
-        val shows = ArrayList<TvShowResultsItem>()
+    fun generateDummyTvShows(): ArrayList<TvShowEntity> {
+        val shows = ArrayList<TvShowEntity>()
         shows.add(
-            TvShowResultsItem(
+            TvShowEntity(
                 1,
                 "Arrow",
                 "2012",
@@ -122,7 +122,7 @@ object DataDummy {
             )
         )
         shows.add(
-            TvShowResultsItem(
+            TvShowEntity(
                 2,
                 "Doom Patrol",
                 "2019",
@@ -132,7 +132,7 @@ object DataDummy {
             )
         )
         shows.add(
-            TvShowResultsItem(
+            TvShowEntity(
                 3,
                 "Dragon Ball",
                 "1986",
@@ -142,7 +142,7 @@ object DataDummy {
             )
         )
         shows.add(
-            TvShowResultsItem(
+            TvShowEntity(
                 4,
                 "Fairy Tail",
                 "2009",
@@ -152,7 +152,7 @@ object DataDummy {
             )
         )
         shows.add(
-            TvShowResultsItem(
+            TvShowEntity(
                 5,
                 "Family Guy",
                 "1999",
@@ -162,7 +162,7 @@ object DataDummy {
             )
         )
         shows.add(
-            TvShowResultsItem(
+            TvShowEntity(
                 6,
                 "The Flash",
                 "2014",
@@ -172,7 +172,7 @@ object DataDummy {
             )
         )
         shows.add(
-            TvShowResultsItem(
+            TvShowEntity(
                 7,
                 "Gotham",
                 "2014",
@@ -182,7 +182,7 @@ object DataDummy {
             )
         )
         shows.add(
-            TvShowResultsItem(
+            TvShowEntity(
                 8,
                 "Grey's Anatomy",
                 "2005",
@@ -192,7 +192,7 @@ object DataDummy {
             )
         )
         shows.add(
-            TvShowResultsItem(
+            TvShowEntity(
                 9,
                 "Hanna",
                 "2019",
@@ -202,7 +202,7 @@ object DataDummy {
             )
         )
         shows.add(
-            TvShowResultsItem(
+            TvShowEntity(
                 10,
                 "Marvel's Iron Fist",
                 "2017",

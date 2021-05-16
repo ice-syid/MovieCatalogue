@@ -2,9 +2,13 @@ package com.example.moviecatalogue.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.example.moviecatalogue.data.source.local.LocalDataSource
+import com.example.moviecatalogue.data.source.local.entity.MovieEntity
+import com.example.moviecatalogue.data.source.local.entity.MoviesEntity
+import com.example.moviecatalogue.data.source.local.entity.TvShowEntity
+import com.example.moviecatalogue.data.source.local.entity.TvShowsEntity
 import com.example.moviecatalogue.data.source.remote.RemoteDataSource
-import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
-import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
+import com.example.moviecatalogue.utils.AppExecutors
 import com.example.moviecatalogue.utils.DataDummy
 import com.example.moviecatalogue.utils.LiveDataTestUtil
 import com.nhaarman.mockitokotlin2.verify
@@ -21,12 +25,14 @@ class VideoRepositoryTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val remote = mock(RemoteDataSource::class.java)
-    private val videoRepository = FakeVideoRepository(remote)
+    private val local = mock(LocalDataSource::class.java)
+    private val appExecutors = mock(AppExecutors::class.java)
+    private val videoRepository = FakeVideoRepository(remote, local, appExecutors)
 
-    private val movies = MutableLiveData<ArrayList<MovieResultsItem>>()
-    private val movie = MutableLiveData<MovieResultsItem>()
-    private val tvShows = MutableLiveData<ArrayList<TvShowResultsItem>>()
-    private val tvShow = MutableLiveData<TvShowResultsItem>()
+    private val movies = MutableLiveData<ArrayList<MovieEntity>>()
+    private val movie = MutableLiveData<MovieEntity>()
+    private val tvShows = MutableLiveData<ArrayList<TvShowEntity>>()
+    private val tvShow = MutableLiveData<TvShowEntity>()
 
     private val movieResponses = DataDummy.generateDummyMovies()
     private val movieId = movieResponses[0].id
@@ -35,41 +41,49 @@ class VideoRepositoryTest {
 
     @Test
     fun getMovies() {
-        movies.value = movieResponses
-        `when`(remote.getMovies()).thenReturn(movies)
+        val dummyMovies = MutableLiveData<MoviesEntity>()
+        movies.value = DataDummy.generateDummyMovies()
+        `when`(local.getMovies()).thenReturn(dummyMovies)
         val movieEntities = LiveDataTestUtil.getValue(videoRepository.getMovies())
-        verify(remote).getMovies()
+        verify(local).getMovies()
         assertNotNull(movieEntities)
-        assertEquals(movieEntities.size.toLong(), movieEntities.size.toLong())
+        assertEquals(
+            movieEntities.data?.results?.size?.toLong(),
+            movieEntities.data?.results?.size?.toLong()
+        )
     }
 
     @Test
     fun getMovie() {
         movie.value = movieResponses[0]
-        `when`(remote.getMovie(movieId)).thenReturn(movie)
+        `when`(local.getMovie(movieId)).thenReturn(movie)
         val movieEntity = LiveDataTestUtil.getValue(videoRepository.getMovie(movieId))
-        verify(remote).getMovie(movieId)
+        verify(local).getMovie(movieId)
         assertNotNull(movieEntity)
-        assertEquals(movie.value, movieEntity)
+        assertEquals(movie.value, movieEntity.data)
     }
 
     @Test
     fun getTvShows() {
+        val dummyTvShows = MutableLiveData<TvShowsEntity>()
         tvShows.value = tvShowResponses
-        `when`(remote.getTvShows()).thenReturn(tvShows)
+        `when`(local.getTvShows()).thenReturn(dummyTvShows)
         val tvShowEntities = LiveDataTestUtil.getValue(videoRepository.getTvShows())
-        verify(remote).getTvShows()
+        verify(local).getTvShows()
         assertNotNull(tvShowEntities)
-        assertEquals(tvShowEntities.size.toLong(), tvShowEntities.size.toLong())
+        assertEquals(
+            tvShowEntities.data?.results?.size?.toLong(),
+            tvShowEntities.data?.results?.size?.toLong()
+        )
     }
 
     @Test
     fun getTvShow() {
         tvShow.value = tvShowResponses[0]
-        `when`(remote.getTvShow(tvShowId)).thenReturn(tvShow)
+        `when`(local.getTvShow(tvShowId)).thenReturn(tvShow)
         val tvShowEntity = LiveDataTestUtil.getValue(videoRepository.getTvShow(tvShowId))
-        verify(remote).getTvShow(tvShowId)
+        verify(local).getTvShow(tvShowId)
         assertNotNull(tvShowEntity)
-        assertEquals(tvShow.value, tvShowEntity)
+        assertEquals(tvShow.value, tvShowEntity.data)
     }
 }

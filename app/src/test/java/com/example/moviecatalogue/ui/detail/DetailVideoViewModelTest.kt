@@ -4,9 +4,10 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.moviecatalogue.data.VideoRepository
-import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
-import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
+import com.example.moviecatalogue.data.source.local.entity.MovieEntity
+import com.example.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.example.moviecatalogue.utils.DataDummy
+import com.example.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -21,10 +22,10 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class DetailVideoViewModelTest {
     private lateinit var viewModel: DetailVideoViewModel
-    private val dummyMovie = DataDummy.generateDummyMovies()[0]
-    private val dummyTvShow = DataDummy.generateDummyTvShows()[0]
-    private val movieId = dummyMovie.id
-    private val tvShowId = dummyTvShow.id
+    private val dummyMovie = Resource.success(DataDummy.generateDummyMovies()[0])
+    private val dummyTvShow = Resource.success(DataDummy.generateDummyTvShows()[0])
+    private val movieId = dummyMovie.data?.id
+    private val tvShowId = dummyTvShow.data?.id
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -47,19 +48,26 @@ class DetailVideoViewModelTest {
 
     @Test
     fun getMovie() {
-        val movies = MutableLiveData<MovieResultsItem>()
+        val movies = MutableLiveData<Resource<MovieEntity>>()
         movies.value = dummyMovie
 
-        `when`(videoRepository.getMovie(movieId)).thenReturn(movies)
-        viewModel.setSelectedVideo(dummyMovie.id, 1)
-        val movieEntity = viewModel.getVideo(movieId)?.value as MovieResultsItem
+        `when`(movieId?.let { videoRepository.getMovie(it) }).thenReturn(movies)
+        viewModel.setSelectedVideo(dummyMovie.data?.id, 1)
+        val movieEntity = viewModel.getVideo(movieId)?.value?.data as MovieEntity
         assertNotNull(movieEntity)
-        assertEquals(dummyMovie.id, movieEntity.id)
-        assertEquals(dummyMovie.title, movieEntity.title)
-        assertEquals(dummyMovie.date, movieEntity.date)
-        assertEquals(dummyMovie.rating, movieEntity.rating, 0.0)
-        assertEquals(dummyMovie.overview, movieEntity.overview)
-        assertEquals(dummyMovie.poster, movieEntity.poster)
+        assertEquals(dummyMovie.data?.id, movieEntity.id)
+        assertEquals(dummyMovie.data?.originalTitle, movieEntity.originalTitle)
+        assertEquals(dummyMovie.data?.releaseDate, movieEntity.releaseDate)
+        dummyMovie.data?.voteAverage?.let {
+            movieEntity.voteAverage?.let { it1 ->
+                assertEquals(
+                    it,
+                    it1, 0.0
+                )
+            }
+        }
+        assertEquals(dummyMovie.data?.overview, movieEntity.overview)
+        assertEquals(dummyMovie.data?.posterPath, movieEntity.posterPath)
 
         viewModel.getVideo(movieId)?.observeForever(movieObserver)
         verify(movieObserver).onChanged(dummyMovie)
@@ -67,19 +75,26 @@ class DetailVideoViewModelTest {
 
     @Test
     fun getTvShow() {
-        val tvShows = MutableLiveData<TvShowResultsItem>()
+        val tvShows = MutableLiveData<Resource<TvShowEntity>>()
         tvShows.value = dummyTvShow
 
-        `when`(videoRepository.getTvShow(tvShowId)).thenReturn(tvShows)
-        viewModel.setSelectedVideo(dummyTvShow.id, 2)
-        val tvShowEntity = viewModel.getVideo(tvShowId)?.value as TvShowResultsItem
+        `when`(tvShowId?.let { videoRepository.getTvShow(it) }).thenReturn(tvShows)
+        viewModel.setSelectedVideo(dummyTvShow.data?.id, 2)
+        val tvShowEntity = viewModel.getVideo(tvShowId)?.value?.data as TvShowEntity
         assertNotNull(tvShowEntity)
-        assertEquals(dummyTvShow.id, tvShowEntity.id)
-        assertEquals(dummyTvShow.title, tvShowEntity.title)
-        assertEquals(dummyTvShow.date, tvShowEntity.date)
-        assertEquals(dummyTvShow.rating, tvShowEntity.rating, 0.0)
-        assertEquals(dummyTvShow.overview, tvShowEntity.overview)
-        assertEquals(dummyTvShow.poster, tvShowEntity.poster)
+        assertEquals(dummyTvShow.data?.id, tvShowEntity.id)
+        assertEquals(dummyTvShow.data?.originalName, tvShowEntity.originalName)
+        assertEquals(dummyTvShow.data?.firstAirDate, tvShowEntity.firstAirDate)
+        dummyTvShow.data?.voteAverage?.let {
+            tvShowEntity.voteAverage?.let { it1 ->
+                assertEquals(
+                    it,
+                    it1, 0.0
+                )
+            }
+        }
+        assertEquals(dummyTvShow.data?.overview, tvShowEntity.overview)
+        assertEquals(dummyTvShow.data?.posterPath, tvShowEntity.posterPath)
 
         viewModel.getVideo(tvShowId)?.observeForever(tvShowObserver)
         verify(tvShowObserver).onChanged(dummyTvShow)
