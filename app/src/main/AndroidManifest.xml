@@ -10,11 +10,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MovieCatalogue">
-        <activity android:name=".ui.favorite.FavoriteActivity"></activity>
+        android:theme="@style/Theme.MovieCatalogue"
+        android:name=".di.MovieCatalogueApp">
+        <activity android:name=".ui.favorite.FavoriteActivity" />
         <activity
             android:name=".ui.home.HomeActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".ui.detail.DetailVideoActivity"
             android:label="@string/title_activity_detail_video"

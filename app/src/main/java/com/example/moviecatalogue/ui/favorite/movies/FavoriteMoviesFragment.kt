@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviecatalogue.databinding.FragmentFavoriteMoviesBinding
 import com.example.moviecatalogue.ui.favorite.FavoriteViewModel
-import com.example.moviecatalogue.viewmodel.ViewModelFactory
+import org.koin.android.ext.android.inject
 
 class FavoriteMoviesFragment : Fragment() {
     private lateinit var binding: FragmentFavoriteMoviesBinding
+    private val viewModel by inject<FavoriteViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,8 +27,6 @@ class FavoriteMoviesFragment : Fragment() {
         stateLoading(true)
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
-            val factory = ViewModelFactory.getInstance(requireActivity())
-            val viewModel = ViewModelProvider(this, factory)[FavoriteViewModel::class.java]
             val movieAdapter = FavoriteMoviesAdapter()
             viewModel.getFavoriteMovies().observe(viewLifecycleOwner) { movies ->
                 if (movies != null) {

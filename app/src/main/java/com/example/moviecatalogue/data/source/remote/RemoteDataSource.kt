@@ -6,27 +6,17 @@ import com.example.moviecatalogue.data.source.remote.api.response.MovieResponse
 import com.example.moviecatalogue.data.source.remote.api.response.MovieResultsItem
 import com.example.moviecatalogue.data.source.remote.api.response.TvShowResponse
 import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsItem
-import com.example.moviecatalogue.data.source.remote.api.service.RetrofitClient
+import com.example.moviecatalogue.data.source.remote.api.service.ApiService
 import com.example.moviecatalogue.utils.EspressoIdlingResource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RemoteDataSource private constructor(private val retrofit: RetrofitClient) {
-
-    companion object {
-        @Volatile
-        private var instance: RemoteDataSource? = null
-
-        fun getInstance(client: RetrofitClient): RemoteDataSource =
-            instance ?: synchronized(this) {
-                instance ?: RemoteDataSource(client)
-            }
-    }
+class RemoteDataSource(private val retrofit: ApiService) {
 
     fun getMovies(): LiveData<ApiResponse<MovieResponse>> {
         val movieLiveData = MutableLiveData<ApiResponse<MovieResponse>>()
-        val response = retrofit.client.getMovies()
+        val response = retrofit.getMovies()
         EspressoIdlingResource.increment()
         response.enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
@@ -58,7 +48,7 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
 
     fun getMovie(movieId: Int): LiveData<ApiResponse<MovieResultsItem>> {
         val movieLiveData = MutableLiveData<ApiResponse<MovieResultsItem>>()
-        val response = retrofit.client.getMovie(movieId)
+        val response = retrofit.getMovie(movieId)
         EspressoIdlingResource.increment()
         response.enqueue(object : Callback<MovieResultsItem> {
             override fun onResponse(
@@ -81,7 +71,7 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
 
     fun getTvShows(): LiveData<ApiResponse<TvShowResponse>> {
         val tvShowLiveData = MutableLiveData<ApiResponse<TvShowResponse>>()
-        val response = retrofit.client.getTvShows()
+        val response = retrofit.getTvShows()
         EspressoIdlingResource.increment()
         response.enqueue(object : Callback<TvShowResponse> {
             override fun onResponse(
@@ -116,7 +106,7 @@ class RemoteDataSource private constructor(private val retrofit: RetrofitClient)
 
     fun getTvShow(tvShowId: Int): LiveData<ApiResponse<TvShowResultsItem>> {
         val tvShowLiveData = MutableLiveData<ApiResponse<TvShowResultsItem>>()
-        val response = retrofit.client.getTvShow(tvShowId)
+        val response = retrofit.getTvShow(tvShowId)
         EspressoIdlingResource.increment()
         response.enqueue(object : Callback<TvShowResultsItem> {
             override fun onResponse(

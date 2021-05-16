@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviecatalogue.databinding.FragmentTvShowBinding
-import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import com.example.moviecatalogue.vo.Status
+import org.koin.android.ext.android.inject
 
 class TvShowFragment : Fragment() {
     private lateinit var binding: FragmentTvShowBinding
+    private val viewModel by inject<TvShowViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,8 +26,6 @@ class TvShowFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
-            val factory = ViewModelFactory.getInstance(requireActivity())
-            val viewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
             val tvShowAdapter = TvShowAdapter()
             viewModel.getTvShows().observe(viewLifecycleOwner, { tvShows ->
                 if (tvShows != null) {

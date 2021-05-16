@@ -31,11 +31,4 @@ class LocalDataSource(private val videoDao: VideoDao) {
     fun getFavoriteMovies() = videoDao.getFavoriteMovies()
 
     fun getFavoriteTvShows() = videoDao.getFavoriteTvShows()
-
-    companion object {
-        private var INSTANCE: LocalDataSource? = null
-
-        fun getInstance(videoDao: VideoDao): LocalDataSource =
-            INSTANCE ?: LocalDataSource(videoDao)
-    }
 }

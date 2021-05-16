@@ -10,6 +10,7 @@
     <string name="overview">Overview</string>
     <string name="todo">TODO</string>
     <string name="favorite">Favorite</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_newest">Newest</string>
+    <string name="menu_oldest">Oldest</string>
+    <string name="menu_random">Random</string>
 </resources>

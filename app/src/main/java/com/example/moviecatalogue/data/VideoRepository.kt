@@ -17,27 +17,12 @@ import com.example.moviecatalogue.data.source.remote.api.response.TvShowResultsI
 import com.example.moviecatalogue.utils.AppExecutors
 import com.example.moviecatalogue.vo.Resource
 
-class VideoRepository private constructor(
+class VideoRepository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val appExecutors: AppExecutors
 ) :
     VideoDataSource {
-
-    companion object {
-        @Volatile
-        private var instance: VideoRepository? = null
-        fun getInstance(
-            remoteData: RemoteDataSource,
-            localData: LocalDataSource,
-            appExecutors: AppExecutors
-        ): VideoRepository =
-            instance ?: synchronized(this) {
-                instance ?: VideoRepository(remoteData, localData, appExecutors).apply {
-                    instance = this
-                }
-            }
-    }
 
     override fun getMovies(): LiveData<Resource<MoviesEntity>> {
         return object : NetworkBoundResource<MoviesEntity, MovieResponse>(appExecutors) {

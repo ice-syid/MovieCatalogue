@@ -6,19 +6,18 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.MovieEntity
 import com.example.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.example.moviecatalogue.databinding.ActivityDetailVideoBinding
-import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import com.example.moviecatalogue.vo.Status
+import org.koin.android.ext.android.inject
 
 class DetailVideoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailVideoBinding
-    private lateinit var viewModel: DetailVideoViewModel
+    private val viewModel by inject<DetailVideoViewModel>()
     private lateinit var movie: MovieEntity
     private lateinit var tvShow: TvShowEntity
     private var extras: Bundle? = null
@@ -31,9 +30,6 @@ class DetailVideoActivity : AppCompatActivity() {
         setContentView(view)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        val factory = ViewModelFactory.getInstance(this)
-        viewModel = ViewModelProvider(this, factory)[DetailVideoViewModel::class.java]
 
         extras = intent.extras
         if (extras != null) {
