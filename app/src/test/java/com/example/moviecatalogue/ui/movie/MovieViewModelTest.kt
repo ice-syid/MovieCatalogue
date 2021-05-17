@@ -8,8 +8,7 @@ import com.example.moviecatalogue.data.source.local.entity.MoviesEntity
 import com.example.moviecatalogue.utils.DataDummy
 import com.example.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -50,5 +49,13 @@ class MovieViewModelTest {
 
         viewModel.getMovies().observeForever(observer)
         verify(observer).onChanged(dummyMovies)
+    }
+
+    @Test
+    fun getMoviesNull() {
+        val moviesExpected = viewModel.getMovies()
+        verify(videoRepository).getMovies()
+
+        assertNull(moviesExpected)
     }
 }
