@@ -10,9 +10,9 @@ import androidx.test.espresso.action.ViewActions.pressBack
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
-import com.example.moviecatalogue.ui.home.HomeActivity
-import com.example.moviecatalogue.utils.DataDummy
-import com.example.moviecatalogue.utils.EspressoIdlingResource
+import com.example.moviecatalogue.home.HomeActivity
+import com.example.moviecatalogue.core.utils.DataDummy
+import com.example.moviecatalogue.core.utils.EspressoIdlingResource
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
