@@ -11,21 +11,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieCatalogue"
-        android:name=".di.MovieCatalogueApp">
-        <activity android:name=".ui.favorite.FavoriteActivity" />
+        android:name="com.example.moviecatalogue.core.di.MovieCatalogueApp">
+        <activity android:name="com.example.moviecatalogue.favorite.FavoriteActivity" />
         <activity
-            android:name=".ui.home.HomeActivity"
+            android:name="com.example.moviecatalogue.home.HomeActivity"
             android:screenOrientation="fullSensor" />
         <activity
-            android:name=".ui.detail.DetailVideoActivity"
+            android:name="com.example.moviecatalogue.detail.DetailVideoActivity"
             android:label="@string/title_activity_detail_video"
-            android:parentActivityName=".ui.home.HomeActivity"
+            android:parentActivityName="com.example.moviecatalogue.home.HomeActivity"
             android:theme="@style/Theme.MovieCatalogue.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.home.HomeActivity" />
+                android:value="com.example.moviecatalogue.home.HomeActivity" />
         </activity>
-        <activity android:name=".ui.splashscreen.SplashScreenActivity">
+        <activity android:name="com.example.moviecatalogue.splashscreen.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
