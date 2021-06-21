@@ -32,11 +32,6 @@ class VideoRepositoryTest {
     private val appExecutors = mock(AppExecutors::class.java)
     private val videoRepository = FakeVideoRepository(remote, local, appExecutors)
 
-    private val movies = MutableLiveData<ArrayList<MovieEntity>>()
-    private val movie = MutableLiveData<MovieEntity>()
-    private val tvShows = MutableLiveData<ArrayList<TvShowEntity>>()
-    private val tvShow = MutableLiveData<TvShowEntity>()
-
     private val movieResponses = DataDummy.generateDummyMovies()
     private val movieId = movieResponses[0].id
     private val tvShowResponses = DataDummy.generateDummyTvShows()
@@ -45,49 +40,52 @@ class VideoRepositoryTest {
     @Test
     fun getMovies() {
         val dummyMovies = MutableLiveData<MoviesEntity>()
-        movies.value = DataDummy.generateDummyMovies()
+        dummyMovies.value = MoviesEntity(1, DataDummy.generateDummyMovies())
         `when`(local.getMovies()).thenReturn(dummyMovies)
+
         val movieEntities = LiveDataTestUtil.getValue(videoRepository.getMovies())
         verify(local).getMovies()
-        assertNotNull(movieEntities)
+        assertNotNull(movieEntities.data)
         assertEquals(
-            movieEntities.data?.results?.size?.toLong(),
+            movieResponses.size.toLong(),
             movieEntities.data?.results?.size?.toLong()
         )
     }
 
     @Test
     fun getMovie() {
-        movie.value = movieResponses[0]
-        `when`(local.getMovie(movieId)).thenReturn(movie)
+        val dummyMovie = MutableLiveData<MovieEntity>()
+        dummyMovie.value = movieResponses[0]
+        `when`(local.getMovie(movieId)).thenReturn(dummyMovie)
         val movieEntity = LiveDataTestUtil.getValue(videoRepository.getMovie(movieId))
         verify(local).getMovie(movieId)
-        assertNotNull(movieEntity)
-        assertEquals(movie.value, movieEntity.data)
+        assertNotNull(movieEntity.data)
+        assertEquals(dummyMovie.value, movieEntity.data)
     }
 
     @Test
     fun getTvShows() {
         val dummyTvShows = MutableLiveData<TvShowsEntity>()
-        tvShows.value = tvShowResponses
+        dummyTvShows.value = TvShowsEntity(1, DataDummy.generateDummyTvShows())
         `when`(local.getTvShows()).thenReturn(dummyTvShows)
         val tvShowEntities = LiveDataTestUtil.getValue(videoRepository.getTvShows())
         verify(local).getTvShows()
-        assertNotNull(tvShowEntities)
+        assertNotNull(tvShowEntities.data)
         assertEquals(
-            tvShowEntities.data?.results?.size?.toLong(),
+            tvShowResponses.size.toLong(),
             tvShowEntities.data?.results?.size?.toLong()
         )
     }
 
     @Test
     fun getTvShow() {
-        tvShow.value = tvShowResponses[0]
-        `when`(local.getTvShow(tvShowId)).thenReturn(tvShow)
+        val dummyTvShow = MutableLiveData<TvShowEntity>()
+        dummyTvShow.value = tvShowResponses[0]
+        `when`(local.getTvShow(tvShowId)).thenReturn(dummyTvShow)
         val tvShowEntity = LiveDataTestUtil.getValue(videoRepository.getTvShow(tvShowId))
         verify(local).getTvShow(tvShowId)
-        assertNotNull(tvShowEntity)
-        assertEquals(tvShow.value, tvShowEntity.data)
+        assertNotNull(tvShowEntity.data)
+        assertEquals(dummyTvShow.value, tvShowEntity.data)
     }
 
     @Test
